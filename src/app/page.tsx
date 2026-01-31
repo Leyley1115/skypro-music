@@ -1,7 +1,4 @@
 import styles from './page.module.css';
-import Image from 'next/image';
-import classNames from 'classnames';
-import Link from 'next/link';
 import Bar from './components/Bar/Bar';
 import Nav from './components/Nav/Nav';
 import CenterBlock from './components/CenterBlock/CenterBlock';
