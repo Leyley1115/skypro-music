@@ -1,0 +1,12 @@
+.item {
+  display: inline-block;
+  color: #fff;
+  cursor: pointer;
+}
+
+.active {
+    width: fit-content;
+    padding-bottom: 0.5px;
+    color: #B672FF;
+    border-bottom: 1px solid #B672FF;
+}

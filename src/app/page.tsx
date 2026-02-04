@@ -9,8 +9,8 @@ export default function Home() {
     <div className={styles.wrapper}>
       <div className={styles.container}>
         <main className={styles.main}>
-          <CenterBlock />
           <Nav />
+          <CenterBlock />
           <SideBar />
         </main>
         <Bar />

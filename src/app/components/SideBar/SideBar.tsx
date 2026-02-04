@@ -9,7 +9,7 @@ export default function SideBar() {
         <p className={styles.sidebar__personalName}>Sergey.Ivanov</p>
         <div className={styles.sidebar__icon}>
           <svg>
-            <use xlinkHref="/.img/icon/sprite.svg#logout"></use>
+            <use xlinkHref="/img/icon/sprite.svg#logout"></use>
           </svg>
         </div>
       </div>
@@ -20,7 +20,7 @@ export default function SideBar() {
             <Link className={styles.sidebar__link} href="#">
               <Image
                 className={styles.sidebar__img}
-                src="/.img/playlist01.png"
+                src="/img/playlist01.png"
                 alt="day's playlist"
                 width={250}
                 height={170}
@@ -32,7 +32,7 @@ export default function SideBar() {
             <Link className={styles.sidebar__link} href="#">
               <Image
                 className={styles.sidebar__img}
-                src="/.img/playlist02.png"
+                src="/img/playlist02.png"
                 alt="day's playlist"
                 width={250}
                 height={170}
@@ -44,7 +44,7 @@ export default function SideBar() {
             <Link className={styles.sidebar__link} href="#">
               <Image
                 className={styles.sidebar__img}
-                src="/.img/playlist03.png"
+                src="/img/playlist03.png"
                 alt="day's playlist"
                 width={250}
                 height={170}
