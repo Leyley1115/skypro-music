@@ -18,7 +18,10 @@ export default function Nav() {
           alt={'logo'}
         />
       </div>
-      <div className={styles.nav__burger} onClick={() => setIsNavOpen(!isNavOpen)}>
+      <div
+        className={styles.nav__burger}
+        onClick={() => setIsNavOpen(!isNavOpen)}
+      >
         <span className={styles.burger__line}></span>
         <span className={styles.burger__line}></span>
         <span className={styles.burger__line}></span>

@@ -25,14 +25,16 @@ export default function Filter({
           className={styles.filter__modal}
           onClick={(e) => e.stopPropagation()}
         >
-          {values.map((v) => (
-            <FilterItem
-              key={v}
-              value={v}
-              selected={selectedValues.includes(v)}
-              onClick={() => onSelect(v)}
-            />
-          ))}
+          <div className={styles.filter__list}>
+            {values.map((v) => (
+              <FilterItem
+                key={v}
+                value={v}
+                selected={selectedValues.includes(v)}
+                onClick={() => onSelect(v)}
+              />
+            ))}
+          </div>
         </div>
       )}
     </div>
