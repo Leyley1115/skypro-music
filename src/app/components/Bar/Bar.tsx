@@ -5,12 +5,21 @@ import Link from 'next/link';
 import { useAppDispatch, useAppSelector } from '@/src/store/store';
 import { useRef } from 'react';
 import { setIsPLay } from '@/src/store/features/trackSlice';
+import { useEffect } from 'react';
 
 export default function Bar() {
   const currentTrack = useAppSelector((state) => state.tracks.currentTrack);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const dispatch = useAppDispatch();
   const isPlay = useAppSelector((state) => state.tracks.isPlay);
+
+  useEffect(() => {
+    if (audioRef.current && currentTrack) {
+      audioRef.current.src = currentTrack.track_file;
+      audioRef.current.play();
+      dispatch(setIsPLay(true));
+    }
+  }, [currentTrack]);
 
   if (!currentTrack) return <></>;
 
@@ -47,9 +56,16 @@ export default function Bar() {
                   !isPlay ? playTrack() : pauseTrack();
                 }}
               >
-                <svg className={styles.player__btnPlaySvg}>
-                  <use xlinkHref="./img/icon/sprite.svg#icon-play"></use>
-                </svg>
+                {!isPlay && (
+                  <svg className={styles.player__btnPlaySvg}>
+                    <use xlinkHref="./img/icon/sprite.svg#icon-play"></use>
+                  </svg>
+                )}
+                {isPlay && (
+                  <svg className={styles.player__btnPlaySvg}>
+                    <use xlinkHref="./img/icon/sprite.svg#icon-pause"></use>
+                  </svg>
+                )}
               </div>
 
               <div className={styles.player__btnNext}>
@@ -81,13 +97,13 @@ export default function Bar() {
 
                 <div className={styles.trackPlay__author}>
                   <Link className={styles.trackPlay__authorLink} href="">
-                    Ты та...
+                    {currentTrack.name}
                   </Link>
                 </div>
 
                 <div className={styles.trackPlay__album}>
                   <Link className={styles.trackPlay__albumLink} href="">
-                    Баста
+                    {currentTrack.author}
                   </Link>
                 </div>
               </div>
