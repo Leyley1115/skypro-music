@@ -4,7 +4,7 @@ import styles from './bar.module.css';
 import Link from 'next/link';
 import { useAppDispatch, useAppSelector } from '@/src/store/store';
 import { useRef, useState } from 'react';
-import { setIsPLay, setCurrentTrack, setNextTrack, setPrevTrack } from '@/src/store/features/trackSlice';
+import { setIsPLay, setCurrentTrack, setNextTrack, setPrevTrack, toogleShuffle } from '@/src/store/features/trackSlice';
 import { useEffect } from 'react';
 import { formatTime } from '@/src/utils/helper';
 import ProgressBar from '../ProgressBar/ProgressBar';
@@ -73,13 +73,17 @@ export default function Bar() {
     }
   }
 
-const nextTrack = () => {
-  dispatch(setNextTrack());
-};
+  const nextTrack = () => {
+    dispatch(setNextTrack());
+  };
 
-const prevTrack = () => {
-  dispatch(setPrevTrack());
-}
+  const prevTrack = () => {
+    dispatch(setPrevTrack());
+  }
+
+  const onToogleShuffle = () => {
+    dispatch(toogleShuffle());
+  }
 
   return (
     <div className={styles.bar}>
@@ -144,7 +148,7 @@ const prevTrack = () => {
                 </svg>
               </div>
 
-              <div className="player__btnShuffle btnIcon">
+              <div className="player__btnShuffle btnIcon" onClick={onToogleShuffle}>
                 <svg className={styles.player__btnShuffleSvg}>
                   <use xlinkHref="./img/icon/sprite.svg#icon-shuffle"></use>
                 </svg>
