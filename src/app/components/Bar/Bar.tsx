@@ -4,7 +4,7 @@ import styles from './bar.module.css';
 import Link from 'next/link';
 import { useAppDispatch, useAppSelector } from '@/src/store/store';
 import { useRef, useState } from 'react';
-import { setIsPLay, setCurrentTrack, setNextTrack, setPrevTrack, toogleShuffle } from '@/src/store/features/trackSlice';
+import { setIsPLay, setCurrentTrack, setNextTrack, setPrevTrack, toogleShuffle, toogleRepeat } from '@/src/store/features/trackSlice';
 import { useEffect } from 'react';
 import { formatTime } from '@/src/utils/helper';
 import ProgressBar from '../ProgressBar/ProgressBar';
@@ -18,6 +18,8 @@ export default function Bar() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const dispatch = useAppDispatch();
   const isPlay = useAppSelector((state) => state.tracks.isPlay);
+  const isRepeat = useAppSelector((state) => state.tracks.isRepeat);
+  const isShuffle = useAppSelector((state) => state.tracks.isShuffle);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -42,10 +44,6 @@ export default function Bar() {
       audioRef.current.pause();
       dispatch(setIsPLay(false));
     }
-  };
-
-  const onToogleLoop = () => {
-    return setIsLoop(!isLoop);
   };
 
   const onTimeUpdate = () => {
@@ -83,6 +81,11 @@ export default function Bar() {
 
   const onToogleShuffle = () => {
     dispatch(toogleShuffle());
+  }
+
+  const onToogleRepeat = () => {
+    dispatch(toogleRepeat());
+    return setIsLoop(!isLoop);
   }
 
   return (
@@ -142,14 +145,22 @@ export default function Bar() {
                 </svg>
               </div>
 
-              <div className="player__btnRepeat btnIcon" onClick={onToogleLoop}>
-                <svg className={styles.player__btnRepeatSvg}>
+              <div className="player__btnRepeat btnIcon" onClick={onToogleRepeat}>
+                <svg  className={`
+                  ${styles.player__btnRepeatSvg} 
+                  ${isRepeat ? styles.active : ""}
+                `}
+                >
                   <use xlinkHref="./img/icon/sprite.svg#icon-repeat"></use>
                 </svg>
               </div>
 
               <div className="player__btnShuffle btnIcon" onClick={onToogleShuffle}>
-                <svg className={styles.player__btnShuffleSvg}>
+                <svg className={`
+                  ${styles.player__btnShuffleSvg}
+                  ${isShuffle ? styles.active : ""}
+                  `}
+                >
                   <use xlinkHref="./img/icon/sprite.svg#icon-shuffle"></use>
                 </svg>
               </div>

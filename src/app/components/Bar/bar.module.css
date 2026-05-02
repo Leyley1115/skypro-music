@@ -193,3 +193,7 @@
   height: 18px;
   fill: transparent;
 }
+
+.active{
+  stroke: #fff;
+}
