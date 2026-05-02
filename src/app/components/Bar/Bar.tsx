@@ -3,23 +3,31 @@
 import styles from './bar.module.css';
 import Link from 'next/link';
 import { useAppDispatch, useAppSelector } from '@/src/store/store';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { setIsPLay } from '@/src/store/features/trackSlice';
 import { useEffect } from 'react';
+import { formatTime } from '@/src/utils/helper';
+import ProgressBar from '../ProgressBar/ProgressBar';
 
 export default function Bar() {
+  const [isLoop, setIsLoop] = useState(false);
+  const [isLoadedTrack, setIsLoadedTrack] = useState(false);
+  const [volume, setVolume] = useState(0.5);
+  const [progressTrack, setProgressTrack] = useState(0); 
   const currentTrack = useAppSelector((state) => state.tracks.currentTrack);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const dispatch = useAppDispatch();
   const isPlay = useAppSelector((state) => state.tracks.isPlay);
 
   useEffect(() => {
-    if (audioRef.current && currentTrack) {
-      audioRef.current.src = currentTrack.track_file;
-      audioRef.current.play();
-      dispatch(setIsPLay(true));
-    }
+    const audio = audioRef.current;
+    if (!audio) return;
+    const update = () => setProgressTrack(audio.currentTime);
+    audio.addEventListener("timeupdate", update);
+
+    return () => audio.removeEventListener("timeupdate", update);
   }, [currentTrack]);
+
 
   if (!currentTrack) return <></>;
 
@@ -36,11 +44,58 @@ export default function Bar() {
     }
   };
 
+  const onToogleLoop = () => {
+    return setIsLoop(!isLoop);
+  };
+
+  const onTimeUpdate = () => {
+    if (audioRef) {
+      // console.log(
+      //   `${formatTime(Number(audioRef.current?.currentTime))}` +
+      //     `/` +
+      //     `${formatTime(Number(audioRef.current?.duration))}`,
+      // );
+      // console.log(audioRef.current?.volume)
+      const time = `${formatTime(Number(audioRef.current?.currentTime))}` +
+          `/` +
+          `${formatTime(Number(audioRef.current?.duration))}`
+      return time
+    }
+  };
+
+  const onLoadMetadata = () => {
+    console.log('Start');
+    if (audioRef.current) {
+      audioRef.current.play();
+      dispatch(setIsPLay(true));
+      setIsLoadedTrack(true);
+    }
+  };
+
+  const onChangeProgress = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (audioRef.current) {
+      const inputTime = Number(e.target.value);
+      audioRef.current.currentTime = inputTime;
+    }
+  }
+
   return (
     <div className={styles.bar}>
-      <audio src={currentTrack?.track_file} ref={audioRef}></audio>
+      <audio
+        src={currentTrack?.track_file}
+        ref={audioRef}
+        loop={isLoop}
+        onTimeUpdate={onTimeUpdate}
+        onLoadedMetadata={onLoadMetadata}
+      ></audio>
       <div className={styles.bar__content}>
-        <div className={styles.bar__playerProgress}></div>
+        <ProgressBar 
+          max={Number(audioRef.current?.duration) || 0} 
+          step={0.1} 
+          readOnly={!isLoadedTrack} 
+          value={progressTrack} 
+          onChange={onChangeProgress}
+        />
         <div className={styles.bar__playerBlock}>
           <div className={styles.bar__player}>
             <div className={styles.player__controls}>
@@ -74,7 +129,7 @@ export default function Bar() {
                 </svg>
               </div>
 
-              <div className="player__btnRepeat btnIcon">
+              <div className="player__btnRepeat btnIcon" onClick={onToogleLoop}>
                 <svg className={styles.player__btnRepeatSvg}>
                   <use xlinkHref="./img/icon/sprite.svg#icon-repeat"></use>
                 </svg>
@@ -137,9 +192,16 @@ export default function Bar() {
                   className="volume__progressLine btn"
                   type="range"
                   name="range"
+                  onChange={(e) => {
+                    setVolume(Number(e.target.value));
+                    if (audioRef.current){
+                      audioRef.current.volume=Number(e.target.value)/100;
+                    }
+                  }}
                 />
               </div>
-            </div>
+            </div> 
+            <p style={{marginLeft: '30px'}}>{onTimeUpdate()}</p>
           </div>
         </div>
       </div>
