@@ -2,10 +2,8 @@
 import styles from './centerblock.module.css';
 import classNames from 'classnames';
 import Search from '../Search/Search';
-import Link from 'next/link';
 import { useState } from 'react';
 import Filter from '../Filter/Filter';
-import { formatTime } from '@/src/utils/helper';
 import { data } from '@/src/data';
 import { getUniqueValuesByKey } from '@/src/utils/helper';
 import Track from '../Track/Track';
@@ -87,7 +85,7 @@ export default function CenterBlock() {
         </div>
         <div className="content__playlist">
           {data.map((track) => (
-            <Track track={track} key={track._id} />
+            <Track track={track} key={track._id} playlist={data}/>
           ))}
         </div>
       </div>

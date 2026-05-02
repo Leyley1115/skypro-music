@@ -4,16 +4,15 @@ import styles from './bar.module.css';
 import Link from 'next/link';
 import { useAppDispatch, useAppSelector } from '@/src/store/store';
 import { useRef, useState } from 'react';
-import { setIsPLay, setCurrentTrack } from '@/src/store/features/trackSlice';
+import { setIsPLay, setCurrentTrack, setNextTrack, setPrevTrack } from '@/src/store/features/trackSlice';
 import { useEffect } from 'react';
 import { formatTime } from '@/src/utils/helper';
 import ProgressBar from '../ProgressBar/ProgressBar';
-import { data } from '@/src/data';
 
 export default function Bar() {
   const [isLoop, setIsLoop] = useState(false);
   const [isLoadedTrack, setIsLoadedTrack] = useState(false);
-  const [volume, setVolume] = useState(0.5);
+  const [volume, setVolume] = useState(100);
   const [progressTrack, setProgressTrack] = useState(0); 
   const currentTrack = useAppSelector((state) => state.tracks.currentTrack);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -75,15 +74,11 @@ export default function Bar() {
   }
 
 const nextTrack = () => {
-  const currentIndex = data.findIndex(t => t._id === currentTrack._id);
-  const nextIndex = (currentIndex + 1) % data.length;
-  dispatch(setCurrentTrack(data[nextIndex]));
+  dispatch(setNextTrack());
 };
 
 const prevTrack = () => {
-  const currentIndex = data.findIndex(t => t._id === currentTrack._id);
-  const prevIndex = (currentIndex - 1 + data.length) % data.length;
-  dispatch(setCurrentTrack(data[prevIndex]));
+  dispatch(setPrevTrack());
 }
 
   return (
@@ -206,6 +201,7 @@ const prevTrack = () => {
                   className="volume__progressLine btn"
                   type="range"
                   name="range"
+                  value={volume}
                   onChange={(e) => {
                     setVolume(Number(e.target.value));
                     if (audioRef.current){
