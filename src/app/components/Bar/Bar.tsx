@@ -4,10 +4,11 @@ import styles from './bar.module.css';
 import Link from 'next/link';
 import { useAppDispatch, useAppSelector } from '@/src/store/store';
 import { useRef, useState } from 'react';
-import { setIsPLay } from '@/src/store/features/trackSlice';
+import { setIsPLay, setCurrentTrack } from '@/src/store/features/trackSlice';
 import { useEffect } from 'react';
 import { formatTime } from '@/src/utils/helper';
 import ProgressBar from '../ProgressBar/ProgressBar';
+import { data } from '@/src/data';
 
 export default function Bar() {
   const [isLoop, setIsLoop] = useState(false);
@@ -50,12 +51,6 @@ export default function Bar() {
 
   const onTimeUpdate = () => {
     if (audioRef) {
-      // console.log(
-      //   `${formatTime(Number(audioRef.current?.currentTime))}` +
-      //     `/` +
-      //     `${formatTime(Number(audioRef.current?.duration))}`,
-      // );
-      // console.log(audioRef.current?.volume)
       const time = `${formatTime(Number(audioRef.current?.currentTime))}` +
           `/` +
           `${formatTime(Number(audioRef.current?.duration))}`
@@ -79,6 +74,18 @@ export default function Bar() {
     }
   }
 
+const nextTrack = () => {
+  const currentIndex = data.findIndex(t => t._id === currentTrack._id);
+  const nextIndex = (currentIndex + 1) % data.length;
+  dispatch(setCurrentTrack(data[nextIndex]));
+};
+
+const prevTrack = () => {
+  const currentIndex = data.findIndex(t => t._id === currentTrack._id);
+  const prevIndex = (currentIndex - 1 + data.length) % data.length;
+  dispatch(setCurrentTrack(data[prevIndex]));
+}
+
   return (
     <div className={styles.bar}>
       <audio
@@ -87,6 +94,7 @@ export default function Bar() {
         loop={isLoop}
         onTimeUpdate={onTimeUpdate}
         onLoadedMetadata={onLoadMetadata}
+        onEnded={nextTrack}
       ></audio>
       <div className={styles.bar__content}>
         <ProgressBar 
@@ -99,7 +107,10 @@ export default function Bar() {
         <div className={styles.bar__playerBlock}>
           <div className={styles.bar__player}>
             <div className={styles.player__controls}>
-              <div className={styles.player__btnPrev}>
+              <div 
+                className={styles.player__btnPrev}
+                onClick={prevTrack}
+              >
                 <svg className={styles.player__btnPrevSvg}>
                   <use xlinkHref="./img/icon/sprite.svg#icon-prev"></use>
                 </svg>
@@ -123,7 +134,10 @@ export default function Bar() {
                 )}
               </div>
 
-              <div className={styles.player__btnNext}>
+              <div 
+                className={styles.player__btnNext}
+                onClick={nextTrack}
+              >
                 <svg className={styles.player__btnNextSvg}>
                   <use xlinkHref="./img/icon/sprite.svg#icon-next"></use>
                 </svg>
@@ -201,7 +215,7 @@ export default function Bar() {
                 />
               </div>
             </div> 
-            <p style={{marginLeft: '30px'}}>{onTimeUpdate()}</p>
+            <p style={{paddingLeft: '30px'}}>{onTimeUpdate()}</p>
           </div>
         </div>
       </div>
