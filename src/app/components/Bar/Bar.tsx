@@ -4,7 +4,7 @@ import styles from './bar.module.css';
 import Link from 'next/link';
 import { useAppDispatch, useAppSelector } from '@/src/store/store';
 import { useRef, useState } from 'react';
-import { setIsPLay, setCurrentTrack, setNextTrack, setPrevTrack, toogleShuffle, toogleRepeat } from '@/src/store/features/trackSlice';
+import { setIsPLay, setNextTrack, setPrevTrack, toogleShuffle, toogleRepeat } from '@/src/store/features/trackSlice';
 import { useEffect } from 'react';
 import { formatTime } from '@/src/utils/helper';
 import ProgressBar from '../ProgressBar/ProgressBar';
