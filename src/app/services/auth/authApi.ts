@@ -1,15 +1,21 @@
 import axios from "axios"
 import { BASE_URL } from "../constants"
 
-interface authUserProps{
+type authUserProps = {
     email: string;
     password: string;
 }
 
-export const AuthUser = (data: authUserProps) => {
+type authUserReturn ={
+    email:string;
+    username: string;
+    _id: number;
+}
+
+export const authUser = (data: authUserProps): Promise<authUserReturn> => {
  return axios.post(
     BASE_URL+'/user/login',
     data,
-    {headers:{"Content-type": "application/json"}},
+    {headers: { 'content-Type': 'application/json' }},
 )
 }

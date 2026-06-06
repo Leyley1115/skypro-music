@@ -3,11 +3,14 @@ import styles from './signin.module.css';
 import classNames from 'classnames';
 import Link from 'next/link';
 import { useState, ChangeEvent } from 'react';
-import { AuthUser } from '../../services/auth/authApi';
+import { authUser } from '../../services/auth/authApi';
+import { AxiosError } from 'axios';
 
 export default function Signin() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     const onChangeEmail = (e:ChangeEvent<HTMLInputElement>) =>{
         setEmail(e.target.value);
@@ -19,21 +22,36 @@ export default function Signin() {
 
     const onSubmit = (e: React.MouseEvent<HTMLButtonElement>) =>{
         e.preventDefault();
-        console.log("клик");
-        
+        setErrorMessage('');
+
         if(!email.trim() || !password.trim()){
-            console.log("пусто");
+            setErrorMessage('Заполните все поля');
             return
         }
 
-        AuthUser({email, password}).then((res) => {
-            console.log(res);
-        }).catch((error) => {
-            console.log(error);
-        });
-    }
-    console.log("страница загрузилась");
+        setIsLoading(true);
 
+        authUser({email, password})
+            .then((res) => {
+                console.log(res);
+            })
+            .catch((error) => {
+                if(error instanceof AxiosError){
+                    if(error.response){
+                        setErrorMessage(error.response.data.message);
+                    } else if (error.request){
+                        setErrorMessage('Отсутствует интернет, попробуй позже');
+                    } else{
+                        setErrorMessage('Неизвестная ошибка');
+                    }
+                }
+                console.log(error.response.data);
+            })
+            .finally(() =>{
+                setIsLoading(false);
+            });
+    }
+    
     return (
         <>
         <a href="/music/main">
@@ -55,8 +73,8 @@ export default function Signin() {
             placeholder="Пароль"
             onChange={onChangePassword}
         />
-        <div className={styles.errorContainer}>{/*Блок для ошибок*/}</div>
-        <button type="button" className={styles.modal__btnEnter} onClick={onSubmit}>Войти</button>
+        <div className={styles.errorContainer}>{errorMessage}</div>
+        <button disabled={isLoading} className={styles.modal__btnEnter} onClick={onSubmit}>Войти</button>
         <Link href={'/auth/signup'} className={styles.modal__btnSignup}>
             Зарегистрироваться
         </Link>

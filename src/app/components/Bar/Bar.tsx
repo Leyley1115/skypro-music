@@ -114,7 +114,7 @@ export default function Bar() {
                 onClick={prevTrack}
               >
                 <svg className={styles.player__btnPrevSvg}>
-                  <use xlinkHref="./img/icon/sprite.svg#icon-prev"></use>
+                  <use xlinkHref="/img/icon/sprite.svg#icon-prev"></use>
                 </svg>
               </div>
 
