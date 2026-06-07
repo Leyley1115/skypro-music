@@ -11,11 +11,13 @@ import { TrackType } from '@/src/sharedTypes/sharedTypes';
 type CenterBlockProps = {
   tracks?: TrackType[];
   isLoading?: boolean;
+  activeCategory?: string | null;
 };
 
 export default function CenterBlock({
   tracks = [],
   isLoading = false,
+  activeCategory = null,
 }: CenterBlockProps) {
   const [openFilter, setOpenFilter] = useState<
     null | 'author' | 'year' | 'genre'
@@ -41,8 +43,8 @@ export default function CenterBlock({
 
   return (
     <div className={styles.centerblock}>
-      <Search title="Заголовок" />
-      <h2 className={styles.centerblock__h2}>Треки</h2>
+      <Search title={activeCategory ?? 'Заголовок'} />
+      <h2 className={styles.centerblock__h2}>{activeCategory ?? 'Треки'}</h2>
 
       <div className={styles.centerblock__filter}>
         <div className={styles.filter__title}>Искать по:</div>
@@ -89,7 +91,7 @@ export default function CenterBlock({
           </div>
           <div className={classNames(styles.playlistTitle__col, styles.col04)}>
             <svg className={styles.playlistTitle__svg}>
-              <use xlinkHref="./img/icon/sprite.svg#icon-watch"></use>
+              <use xlinkHref="/img/icon/sprite.svg#icon-watch"></use>
             </svg>
           </div>
         </div>

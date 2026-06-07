@@ -1,8 +1,14 @@
+'use client';
+
 import styles from './sidebar.module.css';
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 export default function SideBar() {
+  const pathname = usePathname();
+  const active = (id: string) => pathname === `/music/category/${id}`;
+
   return (
     <div className={styles.main__sidebar}>
       <div className={styles.sidebar__personal}>
@@ -16,36 +22,42 @@ export default function SideBar() {
 
       <div className={styles.sidebar__block}>
         <div className={styles.sidebar__list}>
-          <div className={styles.sidebar__item}>
+          <div
+            className={`${styles.sidebar__item} ${active('1') ? styles.active : ''}`}
+          >
             <Link className={styles.sidebar__link} href="/music/category/1">
               <Image
                 className={styles.sidebar__img}
                 src="/img/playlist01.png"
-                alt="day's playlist"
+                alt="плейлист дня"
                 width={250}
                 height={170}
               />
             </Link>
           </div>
 
-          <div className={styles.sidebar__item}>
+          <div
+            className={`${styles.sidebar__item} ${active('2') ? styles.active : ''}`}
+          >
             <Link className={styles.sidebar__link} href="/music/category/2">
               <Image
                 className={styles.sidebar__img}
                 src="/img/playlist02.png"
-                alt="day's playlist"
+                alt="100 тенцевальных хитов"
                 width={250}
                 height={170}
               />
             </Link>
           </div>
 
-          <div className={styles.sidebar__item}>
+          <div
+            className={`${styles.sidebar__item} ${active('3') ? styles.active : ''}`}
+          >
             <Link className={styles.sidebar__link} href="/music/category/3">
               <Image
                 className={styles.sidebar__img}
                 src="/img/playlist03.png"
-                alt="day's playlist"
+                alt="Инди-заряд"
                 width={250}
                 height={170}
               />
