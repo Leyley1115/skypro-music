@@ -31,6 +31,21 @@ export default function Category() {
   useEffect(() => {
     setIsLoading(true);
 
+    const findArray = (
+      value: any,
+    ): Array<number | string> | TrackType[] | null => {
+      if (Array.isArray(value)) return value;
+      if (value && typeof value === 'object') {
+        for (const child of Object.values(value)) {
+          const found = findArray(child);
+          if (found) return found;
+        }
+      }
+      return null;
+    };
+
+    const normalizeSelection = (selection: any) => findArray(selection);
+
     const loadTracks = async () => {
       if (!id) {
         return getAllTracks();
@@ -38,12 +53,18 @@ export default function Category() {
 
       const selectionId = Number(id) + 1;
       const selection = await getSelection(selectionId);
+      const payload = normalizeSelection(selection);
 
-      if (Array.isArray(selection)) {
-        if (selection.every((item) => typeof item === 'number')) {
-          return getTracksByIds(selection as number[]);
+      if (Array.isArray(payload)) {
+        if (payload.length === 0) return [];
+        if (
+          payload.every(
+            (item) => typeof item === 'number' || typeof item === 'string',
+          )
+        ) {
+          return getTracksByIds(payload as Array<number | string>);
         }
-        return selection as TrackType[];
+        return payload as TrackType[];
       }
 
       return getAllTracks();

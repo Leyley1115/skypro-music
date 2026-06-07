@@ -17,13 +17,14 @@ export const getAllTracks = (): Promise<TrackType[]> => {
 
 export const getSelection = (selectionId: number): Promise<any> => {
   const url = BASE_URL + `/catalog/selection/${selectionId}/`;
-  return axios
-    .get(url, { headers: getAuthHeaders() })
-    .then((res) => res.data.data ?? res.data);
+  return axios.get(url, { headers: getAuthHeaders() }).then((res) => res.data);
 };
 
-export const getTracksByIds = (ids: number[]): Promise<TrackType[]> => {
+export const getTracksByIds = (
+  ids: Array<number | string>,
+): Promise<TrackType[]> => {
+  const stringIds = new Set(ids.map((id) => String(id)));
   return getAllTracks().then((tracks) =>
-    tracks.filter((track) => ids.includes(track._id)),
+    tracks.filter((track) => stringIds.has(String(track._id))),
   );
 };
