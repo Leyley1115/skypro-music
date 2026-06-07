@@ -6,11 +6,15 @@ import { useState, ChangeEvent } from 'react';
 import { authUser } from '../../services/auth/authApi';
 import { AxiosError } from 'axios';
 
+import { useRouter } from 'next/navigation';
+
 export default function Signin() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+
+    const router = useRouter();
 
     const onChangeEmail = (e:ChangeEvent<HTMLInputElement>) =>{
         setEmail(e.target.value);
@@ -34,6 +38,9 @@ export default function Signin() {
         authUser({email, password})
             .then((res) => {
                 console.log(res);
+                if (res.status === 200) {
+                router.push('/music/main');
+                }
             })
             .catch((error) => {
                 if(error instanceof AxiosError){
