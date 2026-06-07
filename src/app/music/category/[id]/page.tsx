@@ -6,7 +6,11 @@ import Nav from '../../../components/Nav/Nav';
 import CenterBlock from '../../../components/CenterBlock/CenterBlock';
 import SideBar from '../../../components/SideBar/SideBar';
 import { useEffect, useState } from 'react';
-import { getAllTracks } from '../../../tracks/tracksApi';
+import {
+  getAllTracks,
+  getSelection,
+  getTracksByIds,
+} from '../../../tracks/tracksApi';
 import { TrackType } from '@/src/sharedTypes/sharedTypes';
 import { AxiosError } from 'axios';
 import { useParams } from 'next/navigation';
@@ -26,16 +30,27 @@ export default function Category() {
 
   useEffect(() => {
     setIsLoading(true);
-    getAllTracks()
-      .then((res) => {
-        if (!id) {
-          setTracks(res);
-          return;
+
+    const loadTracks = async () => {
+      if (!id) {
+        return getAllTracks();
+      }
+
+      const selectionId = Number(id) + 1;
+      const selection = await getSelection(selectionId);
+
+      if (Array.isArray(selection)) {
+        if (selection.every((item) => typeof item === 'number')) {
+          return getTracksByIds(selection as number[]);
         }
-        const idNum = Number(id);
-        const filtered = res.filter((t) => t._id % 3 === (idNum - 1 + 3) % 3);
-        setTracks(filtered);
-      })
+        return selection as TrackType[];
+      }
+
+      return getAllTracks();
+    };
+
+    loadTracks()
+      .then((res) => setTracks(res))
       .catch((err) => {
         if (err instanceof AxiosError) {
           setError(err.response?.data?.message || 'Ошибка загрузки треков');
