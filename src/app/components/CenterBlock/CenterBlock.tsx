@@ -4,11 +4,19 @@ import classNames from 'classnames';
 import Search from '../Search/Search';
 import { useState } from 'react';
 import Filter from '../Filter/Filter';
-import { data } from '@/src/data';
 import { getUniqueValuesByKey } from '@/src/utils/helper';
 import Track from '../Track/Track';
+import { TrackType } from '@/src/sharedTypes/sharedTypes';
 
-export default function CenterBlock() {
+type CenterBlockProps = {
+  tracks?: TrackType[];
+  isLoading?: boolean;
+};
+
+export default function CenterBlock({
+  tracks = [],
+  isLoading = false,
+}: CenterBlockProps) {
   const [openFilter, setOpenFilter] = useState<
     null | 'author' | 'year' | 'genre'
   >(null);
@@ -29,6 +37,8 @@ export default function CenterBlock() {
     );
   };
 
+  const playlist = tracks;
+
   return (
     <div className={styles.centerblock}>
       <Search title="Заголовок" />
@@ -38,7 +48,7 @@ export default function CenterBlock() {
         <div className={styles.filter__title}>Искать по:</div>
         <Filter
           label="исполнителю"
-          values={getUniqueValuesByKey(data, 'author')}
+          values={getUniqueValuesByKey(playlist, 'author')}
           open={openFilter === 'author'}
           onToggle={() =>
             setOpenFilter(openFilter === 'author' ? null : 'author')
@@ -56,7 +66,7 @@ export default function CenterBlock() {
         />
         <Filter
           label="жанру"
-          values={getUniqueValuesByKey(data, 'genre')}
+          values={getUniqueValuesByKey(playlist, 'genre')}
           open={openFilter === 'genre'}
           onToggle={() =>
             setOpenFilter(openFilter === 'genre' ? null : 'genre')
@@ -84,9 +94,13 @@ export default function CenterBlock() {
           </div>
         </div>
         <div className="content__playlist">
-          {data.map((track) => (
-            <Track track={track} key={track._id} playlist={data}/>
-          ))}
+          {isLoading ? (
+            <div className={styles.loadingText}>Загрузка треков...</div>
+          ) : (
+            playlist.map((track) => (
+              <Track track={track} key={track._id} playlist={playlist} />
+            ))
+          )}
         </div>
       </div>
     </div>
