@@ -46,17 +46,15 @@ export default function Home() {
   }, [router]);
 
   return (
-    <div className={styles.wrapper}>
-      <div className={styles.container}>
-        <main className={styles.main}>
+    <>
+      <main className={styles.main}>
           {error && <div>{error}</div>}
           <Nav />
           <CenterBlock tracks={tracks} isLoading={isLoading} />
           <SideBar />
         </main>
         <Bar />
-        <footer className="footer"></footer>
-      </div>
-    </div>
+      <footer className="footer"></footer>
+    </>
   );
 }

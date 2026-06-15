@@ -83,8 +83,7 @@ export default function Category() {
   }, [id]);
 
   return (
-    <div className={styles.wrapper}>
-      <div className={styles.container}>
+    <>
         <main className={styles.main}>
           {error && <div>{error}</div>}
           <Nav />
@@ -95,9 +94,6 @@ export default function Category() {
           />
           <SideBar />
         </main>
-        <Bar />
-        <footer className="footer"></footer>
-      </div>
-    </div>
+      </>
   );
 }
