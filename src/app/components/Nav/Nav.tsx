@@ -1,5 +1,6 @@
 'use client';
 
+import { logout } from '../../services/auth/authApi';
 import Image from 'next/image';
 import styles from './nav.module.css';
 import Link from 'next/link';
@@ -40,8 +41,8 @@ export default function Nav() {
               </Link>
             </li>
             <li className={styles.menu__item}>
-              <Link href="../signin.html" className={styles.menu__link}>
-                Войти
+              <Link href="/auth/signin" className={styles.menu__link} onClick={logout}>
+                Выйти
               </Link>
             </li>
           </ul>

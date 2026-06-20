@@ -39,3 +39,7 @@ export const authUser = (
     headers: { 'content-type': 'application/json' },
   });
 };
+
+export const logout = (): void => {
+  localStorage.removeItem('token');
+}

@@ -52,9 +52,7 @@ export default function Home() {
           <Nav />
           <CenterBlock tracks={tracks} isLoading={isLoading} />
           <SideBar />
-        </main>
-        <Bar />
-      <footer className="footer"></footer>
+        </main>w
     </>
   );
 }
