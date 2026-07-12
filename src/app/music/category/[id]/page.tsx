@@ -1,15 +1,7 @@
 'use client';
 
-import styles from '../../main/page.module.css';
-import Nav from '../../../components/Nav/Nav';
 import CenterBlock from '../../../components/CenterBlock/CenterBlock';
-import SideBar from '../../../components/SideBar/SideBar';
 import { useEffect, useState } from 'react';
-import {
-  getAllTracks,
-  getSelection,
-  getTracksByIds,
-} from '../../../tracks/tracksApi';
 import { TrackType } from '@/src/sharedTypes/sharedTypes';
 import { AxiosError } from 'axios';
 import { useParams } from 'next/navigation';
@@ -34,19 +26,10 @@ export default function Category() {
       .then((res) => {
         const category = res.data;
 
-    console.log('CATEGORY:', category);
     const tracksIds = category.items;
-    console.log('TRACKS IDS:', tracksIds);
-
-    console.log('ALL TRACKS:', allTracks);
-    console.log('TRACK IDS IN ALL TRACKS:', allTracks.map(t => t._id));
-
-
     const resultTracks = allTracks.filter((el) =>
       tracksIds.includes(el._id)
     );
-
-    console.log('RESULT TRACKS:', resultTracks);
 
     setTitle(category.name);
     setTracks(resultTracks);
@@ -70,17 +53,13 @@ export default function Category() {
 
   return (
     <>
-        <main className={styles.main}>
           {error && <div>{error}</div>}
-          <Nav />
           <CenterBlock
             errorRes={errorRes}
             tracks={tracks}
             isLoading={fetchIsLoading && isLoading}
             title={title}
           />
-          <SideBar />
-        </main>
       </>
   );
 }
