@@ -40,10 +40,10 @@ export default function Signin() {
       const res = await authUser({ email, password });
       const token = res.data?.access;
 
-      if (!token) {
-        setErrorMessage('Не удалось получить токен');
-        return;
-      }
+      // if (!token) {
+      //   setErrorMessage('Не удалось получить токен');
+      //   return;
+      // }
 
       localStorage.setItem('token', token);
       router.push('/music/main');

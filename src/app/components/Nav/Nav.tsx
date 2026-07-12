@@ -4,10 +4,22 @@ import { logout } from '../../services/auth/authApi';
 import Image from 'next/image';
 import styles from './nav.module.css';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function Nav() {
+  const [token, setToken] = useState<string | null>(null);
   const [isNavOpen, setIsNavOpen] = useState(false);
+  {
+  useEffect(() => {
+    setToken(localStorage.getItem('token'));
+  }, []);
+
+  const handleLogout = () => {
+  logout();
+  localStorage.removeItem('token');
+  setToken(null);
+  };
+
   return (
     <nav className={styles.main__nav}>
       <div className={styles.nav__logo}>
@@ -34,20 +46,31 @@ export default function Nav() {
               <Link href="#" className={styles.menu__link}>
                 Главное
               </Link>
-            </li>
+            </li> 
+            {token && (
             <li className={styles.menu__item}>
-              <Link href="#" className={styles.menu__link}>
-                Мой плейлист
-              </Link>
-            </li>
+             
+                <Link href="#" className={styles.menu__link}>
+                  Мой плейлист
+                </Link>
+             
+            </li> 
+            )}
             <li className={styles.menu__item}>
-              <Link href="/auth/signin" className={styles.menu__link} onClick={logout}>
-                Выйти
-              </Link>
+              {!token && (
+                <Link href="/auth/signin" className={styles.menu__link}>
+                  Войти
+                </Link>
+              )}
+              {token && (
+                <Link href="/music/main" className={styles.menu__link} onClick={handleLogout}>
+                  Выйти
+                </Link>
+              )}
             </li>
           </ul>
         )}
       </div>
     </nav>
   );
-}
+}}

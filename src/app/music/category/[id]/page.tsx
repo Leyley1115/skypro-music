@@ -10,7 +10,7 @@ import { getCategories } from '@/src/store/features/categorySlice';
 
 export default function Category() {
   const params = useParams<{ id: string }>();
-  const {allTracks, fetchIsLoading} = useAppSelector((state) => state.tracks);
+  const {allTracks, fetchIsLoading, fetchError} = useAppSelector((state) => state.tracks);
   const id = params.id;
   const [tracks, setTracks] = useState<TrackType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -21,7 +21,7 @@ export default function Category() {
   useEffect(() => {
     setIsLoading(true);
 
-    if(!fetchIsLoading && allTracks.length > 0){
+    if(!fetchIsLoading && allTracks.length){
       getCategories(id)
       .then((res) => {
         const category = res.data;
@@ -55,11 +55,11 @@ export default function Category() {
     <>
           {error && <div>{error}</div>}
           <CenterBlock
-            errorRes={errorRes}
+            errorRes={errorRes || fetchError}
             tracks={tracks}
             isLoading={fetchIsLoading && isLoading}
             title={title}
           />
-      </>
+    </>
   );
 }

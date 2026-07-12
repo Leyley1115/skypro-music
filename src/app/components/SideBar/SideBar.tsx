@@ -8,9 +8,11 @@ import { usePathname } from 'next/navigation';
 export default function SideBar() {
   const pathname = usePathname();
   const active = (id: string) => pathname === `/music/category/${id}`;
+  const token = localStorage.getItem('token');
 
   return (
     <div className={styles.main__sidebar}>
+      {token && (
       <div className={styles.sidebar__personal}>
         <p className={styles.sidebar__personalName}>Sergey.Ivanov</p>
         <div className={styles.sidebar__icon}>
@@ -18,7 +20,8 @@ export default function SideBar() {
             <use xlinkHref="/img/icon/sprite.svg#logout"></use>
           </svg>
         </div>
-      </div>
+      </div>)
+      }
 
       <div className={styles.sidebar__block}>
         <div className={styles.sidebar__list}>

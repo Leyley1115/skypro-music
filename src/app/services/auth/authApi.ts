@@ -24,17 +24,13 @@ type signUpUserProps = {
   username: string;
 };
 
-export const signUpUser = (
-  data: signUpUserProps,
-): Promise<AxiosResponse<authUserReturn>> => {
+export const signUpUser = (data: signUpUserProps,): Promise<AxiosResponse<authUserReturn>> => {
   return axios.post(BASE_URL + '/user/signup', data, {
     headers: { 'Content-Type': 'application/json' },
   });
 };
 
-export const authUser = (
-  data: authUserProps,
-): Promise<AxiosResponse<authTokenResponse>> => {
+export const authUser = (data: authUserProps,): Promise<AxiosResponse<authTokenResponse>> => {
   return axios.post(BASE_URL + '/user/token/', data, {
     headers: { 'content-type': 'application/json' },
   });
@@ -43,3 +39,7 @@ export const authUser = (
 export const logout = (): void => {
   localStorage.removeItem('token');
 }
+
+// export const getToken = (data: signUpUserProps) => {
+//   return axios.post(BASE_URL + '/user/token/', data, {
+// }
