@@ -7,7 +7,7 @@ import { AxiosError } from 'axios';
 import { useRouter } from 'next/navigation';
 import classNames from 'classnames';
 import Link from 'next/link';
-import {setUsername} from '../../../store/features/authSlice';
+import {setAccessToken, setRefreshToken, setUsername} from '../../../store/features/authSlice';
 import { useAppDispatch } from '@/src/store/store';
 
 export default function Signin() {
@@ -48,8 +48,13 @@ export default function Signin() {
         setErrorMessage('Не удалось получить токен');
         return;
       }
-
       localStorage.setItem('token', token);
+
+      getToken({email, password})
+      .then((res) =>{
+        dispatch(setAccessToken(res.access));
+        dispatch(setRefreshToken(res.refresh))
+      })
       router.push('/music/main');
     } catch (error) {
       console.log('auth error', error);
