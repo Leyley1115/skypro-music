@@ -11,13 +11,15 @@ import { TrackType } from '@/src/sharedTypes/sharedTypes';
 type CenterBlockProps = {
   tracks?: TrackType[];
   isLoading?: boolean;
-  activeCategory?: string | null;
+  errorRes?: string | null;
+  title?: string;
 };
 
 export default function CenterBlock({
   tracks = [],
-  isLoading = false,
-  activeCategory = null,
+  isLoading,
+  errorRes,
+  title,
 }: CenterBlockProps) {
   const [openFilter, setOpenFilter] = useState<
     null | 'author' | 'year' | 'genre'
@@ -43,9 +45,8 @@ export default function CenterBlock({
 
   return (
     <div className={styles.centerblock}>
-      <Search title={activeCategory ?? 'Заголовок'} />
-      <h2 className={styles.centerblock__h2}>{activeCategory ?? 'Треки'}</h2>
-
+      <Search title={title ?? 'Заголовок'} />
+      <h2 className={styles.centerblock__h2}>{title ?? 'Треки'}</h2>
       <div className={styles.centerblock__filter}>
         <div className={styles.filter__title}>Искать по:</div>
         <Filter
@@ -96,13 +97,14 @@ export default function CenterBlock({
           </div>
         </div>
         <div className="content__playlist">
-          {isLoading ? (
-            <div className={styles.loadingText}>Загрузка треков...</div>
-          ) : (
-            playlist.map((track) => (
+          {errorRes 
+          ? errorRes
+          : isLoading
+              ? 'Загрузка...'
+              : playlist.map((track) => (
               <Track track={track} key={track._id} playlist={playlist} />
             ))
-          )}
+          }
         </div>
       </div>
     </div>

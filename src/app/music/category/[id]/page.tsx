@@ -1,7 +1,6 @@
 'use client';
 
 import styles from '../../main/page.module.css';
-import Bar from '../../../components/Bar/Bar';
 import Nav from '../../../components/Nav/Nav';
 import CenterBlock from '../../../components/CenterBlock/CenterBlock';
 import SideBar from '../../../components/SideBar/SideBar';
@@ -14,73 +13,60 @@ import {
 import { TrackType } from '@/src/sharedTypes/sharedTypes';
 import { AxiosError } from 'axios';
 import { useParams } from 'next/navigation';
+import { useAppSelector } from '@/src/store/store';
+import { getCategories } from '@/src/store/features/categorySlice';
 
 export default function Category() {
   const params = useParams<{ id: string }>();
+  const {allTracks, fetchIsLoading} = useAppSelector((state) => state.tracks);
   const id = params.id;
   const [tracks, setTracks] = useState<TrackType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
-
-  const categoryMap: Record<string, string> = {
-    '1': 'Плейлист дня',
-    '2': '100 тенцевальных хитов',
-    '3': 'Инди-заряд',
-  };
+  const [title, setTitle] = useState('');
+  const [errorRes, setErrorRes] = useState<string | null>(null);
 
   useEffect(() => {
     setIsLoading(true);
 
-    const findArray = (
-      value: any,
-    ): Array<number | string> | TrackType[] | null => {
-      if (Array.isArray(value)) return value;
-      if (value && typeof value === 'object') {
-        for (const child of Object.values(value)) {
-          const found = findArray(child);
-          if (found) return found;
-        }
-      }
-      return null;
-    };
+    if(!fetchIsLoading && allTracks.length > 0){
+      getCategories(id)
+      .then((res) => {
+        const category = res.data;
 
-    const normalizeSelection = (selection: any) => findArray(selection);
+    console.log('CATEGORY:', category);
+    const tracksIds = category.items;
+    console.log('TRACKS IDS:', tracksIds);
 
-    const loadTracks = async () => {
-      if (!id) {
-        return getAllTracks();
-      }
+    console.log('ALL TRACKS:', allTracks);
+    console.log('TRACK IDS IN ALL TRACKS:', allTracks.map(t => t._id));
 
-      const selectionId = Number(id) + 1;
-      const selection = await getSelection(selectionId);
-      const payload = normalizeSelection(selection);
 
-      if (Array.isArray(payload)) {
-        if (payload.length === 0) return [];
-        if (
-          payload.every(
-            (item) => typeof item === 'number' || typeof item === 'string',
-          )
-        ) {
-          return getTracksByIds(payload as Array<number | string>);
-        }
-        return payload as TrackType[];
-      }
+    const resultTracks = allTracks.filter((el) =>
+      tracksIds.includes(el._id)
+    );
 
-      return getAllTracks();
-    };
+    console.log('RESULT TRACKS:', resultTracks);
 
-    loadTracks()
-      .then((res) => setTracks(res))
-      .catch((err) => {
-        if (err instanceof AxiosError) {
-          setError(err.response?.data?.message || 'Ошибка загрузки треков');
+    setTitle(category.name);
+    setTracks(resultTracks);
+      })
+      .catch((error) => {
+        if (error instanceof AxiosError) {
+          if (error.response) {
+            setErrorRes(error.response.data);
+          } else if (error.request) {
+            setErrorRes('Ошибка вышла');
+          }
         } else {
-          setError('Неизвестная ошибка');
+          setErrorRes(error.message);
         }
       })
-      .finally(() => setIsLoading(false));
-  }, [id]);
+      .finally(() => {
+        setIsLoading(false);
+      });
+    }
+  }, [fetchIsLoading]);
 
   return (
     <>
@@ -88,9 +74,10 @@ export default function Category() {
           {error && <div>{error}</div>}
           <Nav />
           <CenterBlock
+            errorRes={errorRes}
             tracks={tracks}
-            isLoading={isLoading}
-            activeCategory={id ? categoryMap[id] : null}
+            isLoading={fetchIsLoading && isLoading}
+            title={title}
           />
           <SideBar />
         </main>
