@@ -2,6 +2,16 @@ import axios from 'axios';
 import { BASE_URL } from '../constants';
 import { AxiosResponse } from 'axios';
 
+type accessTokenType = {
+  access: string;
+};
+
+type refreshTokenType = {
+  refresh: string;
+};
+
+type tokensType = accessTokenType & refreshTokenType;
+
 type authUserProps = {
   email: string;
   password: string;
@@ -31,15 +41,19 @@ export const signUpUser = (data: signUpUserProps,): Promise<AxiosResponse<authUs
 };
 
 export const authUser = (data: authUserProps,): Promise<AxiosResponse<authTokenResponse>> => {
-  return axios.post(BASE_URL + '/user/token/', data, {
-    headers: { 'content-type': 'application/json' },
-  });
+  return axios.post(BASE_URL + '/user/login/', data);
 };
 
 export const logout = (): void => {
   localStorage.removeItem('token');
 }
 
-// export const getToken = (data: signUpUserProps) => {
-//   return axios.post(BASE_URL + '/user/token/', data, {
-// }
+export const getToken = (data: authUserProps): Promise<tokensType> => {
+  return axios.post(BASE_URL + '/user/token/', data, )
+  .then((res) => res.data);
+}
+
+export const refreshToken = (refresh: string): Promise<refreshTokenType> => {
+  return axios.post(BASE_URL + '/user/token/refresh/', { refresh })
+    .then((res) => res.data);
+}

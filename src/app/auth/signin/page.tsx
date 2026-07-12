@@ -1,13 +1,17 @@
 'use client';
 import styles from './signin.module.css';
-import classNames from 'classnames';
-import Link from 'next/link';
+import {getToken} from '../../services/auth/authApi';
 import { useState, ChangeEvent } from 'react';
 import { authUser } from '../../services/auth/authApi';
 import { AxiosError } from 'axios';
 import { useRouter } from 'next/navigation';
+import classNames from 'classnames';
+import Link from 'next/link';
+import {setUsername} from '../../../store/features/authSlice';
+import { useAppDispatch } from '@/src/store/store';
 
 export default function Signin() {
+  const dispatch = useAppDispatch();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -36,14 +40,14 @@ export default function Signin() {
     setIsLoading(true);
 
     try {
-      console.log('calling authUser');
-      const res = await authUser({ email, password });
-      const token = res.data?.access;
+      const res = await getToken({ email, password })
+      const token = res.access;
+      dispatch(setUsername(email));
 
-      // if (!token) {
-      //   setErrorMessage('Не удалось получить токен');
-      //   return;
-      // }
+      if (!token) {
+        setErrorMessage('Не удалось получить токен');
+        return;
+      }
 
       localStorage.setItem('token', token);
       router.push('/music/main');

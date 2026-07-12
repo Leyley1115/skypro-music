@@ -5,9 +5,12 @@ import Image from 'next/image';
 import styles from './nav.module.css';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { useAppDispatch } from '@/src/store/store';
+import { setUsername } from '@/src/store/features/authSlice';
 
 export default function Nav() {
   const [token, setToken] = useState<string | null>(null);
+  const dispatch = useAppDispatch();
   const [isNavOpen, setIsNavOpen] = useState(false);
   {
   useEffect(() => {
@@ -15,9 +18,10 @@ export default function Nav() {
   }, []);
 
   const handleLogout = () => {
-  logout();
-  localStorage.removeItem('token');
-  setToken(null);
+    dispatch(setUsername(''));
+    logout();
+    localStorage.removeItem('token');
+    setToken(null);
   };
 
   return (
