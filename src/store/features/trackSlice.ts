@@ -37,12 +37,14 @@ const trackSlice = createSlice({
     setAllTracks: (state, action: PayloadAction<TrackType[]>) => {
       state.allTracks = action.payload;
     },
-    setFavoriteTracks:(state, action: PayloadAction<TrackType[]>) => {
+    setFavoriteTracks: (state, action: PayloadAction<TrackType[]>) => {
       state.favoriteTracks = action.payload;
     },
     setCurrentPlaylist: (state, action: PayloadAction<TrackType[]>) => {
       state.playlist = action.payload;
-      state.shufflePlaylist = [...state.playlist].sort(() => Math.random()-0.5);
+      state.shufflePlaylist = [...state.playlist].sort(
+        () => Math.random() - 0.5,
+      );
     },
     setFetchError: (state, action: PayloadAction<string>) => {
       state.fetchError = action.payload;
@@ -56,11 +58,13 @@ const trackSlice = createSlice({
     setNextTrack: (state) => {
       const playlist = state.isShuffle ? state.shufflePlaylist : state.playlist;
 
-      if (state.currentTrack){
-        const curIndex = playlist.findIndex((el) => el._id === state.currentTrack?._id)
+      if (state.currentTrack) {
+        const curIndex = playlist.findIndex(
+          (el) => el._id === state.currentTrack?._id,
+        );
         const nexIndex = curIndex + 1;
         state.currentTrack = playlist[nexIndex] || playlist[0];
-      };
+      }
     },
     toogleRepeat: (state) => {
       state.isRepeat = !state.isRepeat;
@@ -79,18 +83,18 @@ const trackSlice = createSlice({
     addLikedTracks: (state, action: PayloadAction<TrackType>) => {
       state.favoriteTracks =[...state.favoriteTracks, action.payload];
     },
-     removeLikedTracks: (state, action: PayloadAction<TrackType>) => {
+    removeLikedTracks: (state, action: PayloadAction<TrackType>) => {
       state.favoriteTracks = state.favoriteTracks.filter((track) => track._id !== action.payload._id);
     },
   },
 });
 
-export const { 
-  setCurrentTrack, 
-  setIsPLay, 
-  setCurrentPlaylist, 
-  setNextTrack, 
-  setPrevTrack, 
+export const {
+  setCurrentTrack,
+  setIsPLay,
+  setCurrentPlaylist,
+  setNextTrack,
+  setPrevTrack,
   toogleShuffle,
   setFetchError,
   setFetchIsLoading,
@@ -98,6 +102,6 @@ export const {
   setFavoriteTracks,
   addLikedTracks,
   removeLikedTracks,
-  toogleRepeat 
-  } = trackSlice.actions;
+  toogleRepeat,
+} = trackSlice.actions;
 export const trackSliceReducer = trackSlice.reducer;
