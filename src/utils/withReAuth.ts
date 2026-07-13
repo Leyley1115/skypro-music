@@ -1,5 +1,7 @@
 import { AxiosError } from "axios";
 import { refreshToken } from "../app/services/auth/authApi";
+import { setAccessToken } from "../store/features/authSlice";
+import { AppDispatch } from "../store/store";
 
 export const withReauth = async <T>(
   apiFunction: (access: string) => Promise<T>,
@@ -29,3 +31,9 @@ export const withReauth = async <T>(
     throw error;
   }
 };
+
+// withReauth(
+//   (newToken) => addLikeApi(newToken || access, track._id),
+//   refresh,
+//   dispatch,
+// )
