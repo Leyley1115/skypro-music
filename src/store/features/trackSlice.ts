@@ -80,7 +80,7 @@ const trackSlice = createSlice({
       state.favoriteTracks =[...state.favoriteTracks, action.payload];
     },
      removeLikedTracks: (state, action: PayloadAction<TrackType>) => {
-      state.favoriteTracks =[...state.favoriteTracks, action.payload];
+      state.favoriteTracks = state.favoriteTracks.filter((track) => track._id !== action.payload._id);
     },
   },
 });
