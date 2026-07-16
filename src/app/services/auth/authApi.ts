@@ -46,6 +46,9 @@ export const authUser = (data: authUserProps,): Promise<AxiosResponse<authTokenR
 
 export const logout = (): void => {
   localStorage.removeItem('token');
+  localStorage.removeItem('access');
+  localStorage.removeItem('refresh');
+  localStorage.removeItem('username');
 }
 
 export const getToken = (data: authUserProps): Promise<tokensType> => {

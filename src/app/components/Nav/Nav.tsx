@@ -4,31 +4,20 @@ import { logout } from '../../services/auth/authApi';
 import Image from 'next/image';
 import styles from './nav.module.css';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useAppDispatch } from '@/src/store/store';
-import { setUsername } from '@/src/store/features/authSlice';
 import { useAppSelector } from '@/src/store/store';
-import { setAccessToken, setRefreshToken } from '@/src/store/features/authSlice';
+import { clearUser } from '@/src/store/features/authSlice';
 
 export default function Nav() {
   const dispatch = useAppDispatch();
   const [isNavOpen, setIsNavOpen] = useState(false);
-  const {access, refresh} = useAppSelector((state) => state.auth);
-  const [isAuth, setIsAuth] = useState<boolean>(false);
-
-  {
-    useEffect(() =>{
-      setIsAuth(access != null ? true : false);
-    }, [])
+  const { access } = useAppSelector((state) => state.auth);
+  const isAuth = Boolean(access && access.trim().length > 0);
 
   const handleLogout = () => {
-    dispatch(setUsername(''));
     logout();
-    localStorage.removeItem('access');
-    localStorage.removeItem('refresh');
-    setAccessToken(null);
-    setRefreshToken(null);
-    setIsAuth(false);
+    dispatch(clearUser());
   };
 
   return (
@@ -83,4 +72,4 @@ export default function Nav() {
       </div>
     </nav>
   );
-}}
+}
