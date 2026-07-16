@@ -2,7 +2,6 @@
 import styles from './signin.module.css';
 import {getToken} from '../../services/auth/authApi';
 import { useState, ChangeEvent } from 'react';
-import { authUser } from '../../services/auth/authApi';
 import { AxiosError } from 'axios';
 import { useRouter } from 'next/navigation';
 import classNames from 'classnames';
@@ -48,7 +47,7 @@ export default function Signin() {
         setErrorMessage('Не удалось получить токен');
         return;
       }
-      
+
       getToken({email, password})
       .then((res) =>{
         dispatch(setAccessToken(res.access));

@@ -8,17 +8,17 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch } from '@/src/store/store';
 import { setUsername } from '@/src/store/features/authSlice';
 import { useAppSelector } from '@/src/store/store';
+import { setAccessToken, setRefreshToken } from '@/src/store/features/authSlice';
 
 export default function Nav() {
   const dispatch = useAppDispatch();
   const [isNavOpen, setIsNavOpen] = useState(false);
   const {access, refresh} = useAppSelector((state) => state.auth);
-  const [accessToken, setAccessToken] = useState<string | null>(null);
-  const [refreshToken, setRefreshToken] = useState<string | null>(null);
+  const [isAuth, setIsAuth] = useState<boolean>(false);
+
   {
     useEffect(() =>{
-      setAccessToken(access);
-      setRefreshToken(refresh);
+      setIsAuth(access != null ? true : false);
     }, [])
 
   const handleLogout = () => {
@@ -28,6 +28,7 @@ export default function Nav() {
     localStorage.removeItem('refresh');
     setAccessToken(null);
     setRefreshToken(null);
+    setIsAuth(false);
   };
 
   return (
@@ -57,7 +58,7 @@ export default function Nav() {
                 Главное
               </Link>
             </li> 
-            {accessToken&& (
+            {isAuth&& (
             <li className={styles.menu__item}>
                 <Link href="#" className={styles.menu__link}>
                   Мой плейлист
@@ -66,12 +67,12 @@ export default function Nav() {
             </li> 
             )}
             <li className={styles.menu__item}>
-              {!accessToken && (
+              {!isAuth && (
                 <Link href="/auth/signin" className={styles.menu__link}>
                   Войти
                 </Link>
               )}
-              {accessToken&& (
+              {isAuth&& (
                 <Link href="/music/main" className={styles.menu__link} onClick={handleLogout}>
                   Выйти
                 </Link>
