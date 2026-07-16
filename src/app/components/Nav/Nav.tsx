@@ -12,18 +12,22 @@ import { useAppSelector } from '@/src/store/store';
 export default function Nav() {
   const dispatch = useAppDispatch();
   const [isNavOpen, setIsNavOpen] = useState(false);
-  const access = useAppSelector((state) => state.auth);
+  const {access, refresh} = useAppSelector((state) => state.auth);
   const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [refreshToken, setRefreshToken] = useState<string | null>(null);
   {
     useEffect(() =>{
-      setAccessToken(localStorage.getItem('access'))
+      setAccessToken(access);
+      setRefreshToken(refresh);
     }, [])
 
   const handleLogout = () => {
     dispatch(setUsername(''));
     logout();
     localStorage.removeItem('access');
+    localStorage.removeItem('refresh');
     setAccessToken(null);
+    setRefreshToken(null);
   };
 
   return (

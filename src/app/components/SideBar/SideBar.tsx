@@ -4,20 +4,12 @@ import styles from './sidebar.module.css';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect } from 'react';
-import { useState } from 'react';
 import { useAppSelector } from '@/src/store/store';
 
 export default function SideBar() {
   const pathname = usePathname();
   const active = (id: string) => pathname === `/music/category/${id}`;
-  const [token, setToken] = useState<string | null>(null);
   const username = useAppSelector((state) => state.auth.username);
-
-  useEffect(() => {
-    const t = localStorage.getItem('token');
-    setToken(t);
-  }, []);
 
   return (
     <div className={styles.main__sidebar}>

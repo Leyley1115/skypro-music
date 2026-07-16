@@ -48,8 +48,7 @@ export default function Signin() {
         setErrorMessage('Не удалось получить токен');
         return;
       }
-      localStorage.setItem('token', token);
-
+      
       getToken({email, password})
       .then((res) =>{
         dispatch(setAccessToken(res.access));
