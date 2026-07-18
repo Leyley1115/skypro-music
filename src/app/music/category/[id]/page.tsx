@@ -18,18 +18,21 @@ export default function Category() {
   const [error, setError] = useState('');
   const [title, setTitle] = useState('');
   const [errorRes, setErrorRes] = useState<string | null>(null);
-
+  const { access } = useAppSelector((state) => state.auth);
+  const isAuth = Boolean(access && access.trim().length > 0);
 
   useEffect(() => {
     setIsLoading(true);
-
     if (id === 'myplaylist') {
+      if(isAuth){
+        
       setTitle('Мой плейлист');
       setTracks(favoriteTracks);
       setIsLoading(false);
       return;
+      }
     }
-    
+
     if(!fetchIsLoading && allTracks.length){
       getCategories(id)
       .then((res) => {
@@ -58,7 +61,7 @@ export default function Category() {
         setIsLoading(false);
       });
     }
-  }, [fetchIsLoading]);
+  }, [fetchIsLoading, favoriteTracks]);
 
   return (
     <>

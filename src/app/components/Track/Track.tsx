@@ -64,7 +64,7 @@ export default function Track({ track, playlist }: trackTypeProp) {
         </div>
 
         <div className={styles.track__time}>
-          <svg className={styles.track__timeSvg} onClick={toggleLike}> 
+          <svg className={styles.track__timeSvg} onClick={(e) => {e.stopPropagation(); toggleLike()}}> 
             <use xlinkHref={`/img/icon/sprite.svg#${isLike ? 'icon-like' : 'icon-dislike'}`}></use>
           </svg>
           <span className={styles.track__timeText}>
