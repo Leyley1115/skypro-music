@@ -18,3 +18,12 @@ export const removeLike = (access: string, id: number) => {
     },
   });
 };
+
+export const getFavoriteTracks = (access: string) => {
+  return axios.get(BASE_URL+`/catalog/track/favorite/all/`, {
+    headers: {
+      Authorization: `Bearer ${access}`,
+    },
+  }).then((res) => res.data);
+};
+

@@ -1,13 +1,17 @@
 'use client';
 import styles from './signin.module.css';
-import {getToken} from '../../services/auth/authApi';
+import { getToken } from '../../services/auth/authApi';
 import { useState, ChangeEvent } from 'react';
 import { AxiosError } from 'axios';
 import { useRouter } from 'next/navigation';
 import classNames from 'classnames';
 import Link from 'next/link';
-import {setAccessToken, setRefreshToken, setUsername} from '../../../store/features/authSlice';
-import { useAppDispatch } from '@/src/store/store';
+import {
+  setAccessToken,
+  setRefreshToken,
+  setUsername,
+} from '../../../store/features/authSlice';
+import { useAppDispatch, useAppSelector } from '@/src/store/store';
 
 export default function Signin() {
   const dispatch = useAppDispatch();
@@ -39,8 +43,11 @@ export default function Signin() {
     setIsLoading(true);
 
     try {
-      const res = await getToken({ email, password })
+      const res = await getToken({ email, password });
       const token = res.access;
+
+      dispatch(setAccessToken(token));
+      dispatch(setRefreshToken(res.refresh));
       dispatch(setUsername(email));
 
       if (!token) {
@@ -48,11 +55,6 @@ export default function Signin() {
         return;
       }
 
-      getToken({email, password})
-      .then((res) =>{
-        dispatch(setAccessToken(res.access));
-        dispatch(setRefreshToken(res.refresh))
-      })
       router.push('/music/main');
     } catch (error) {
       console.log('auth error', error);
