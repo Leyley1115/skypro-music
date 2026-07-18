@@ -1,5 +1,5 @@
 .bar {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
@@ -80,13 +80,19 @@
   stroke: #696969;
 }
 
+.player__btnRepeatSvg:hover {
+  stroke: #ffffff;
+}
+
 .player__btnShuffleSvg {
   width: 19px;
   height: 12px;
   fill: transparent;
   stroke: #696969;
 }
-
+.player__btnShuffleSvg:hover {
+  stroke: #ffffff;
+}
 .player__trackPlay {
   display: flex;
   flex-direction: row;
@@ -186,4 +192,8 @@
   width: 13px;
   height: 18px;
   fill: transparent;
+}
+
+.active{
+  stroke: #fff;
 }
