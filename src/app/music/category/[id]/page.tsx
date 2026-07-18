@@ -8,9 +8,10 @@ import { useParams } from 'next/navigation';
 import { useAppSelector } from '@/src/store/store';
 import { getCategories } from '@/src/store/features/categorySlice';
 
+
 export default function Category() {
   const params = useParams<{ id: string }>();
-  const {allTracks, fetchIsLoading, fetchError} = useAppSelector((state) => state.tracks);
+  const {allTracks, fetchIsLoading, fetchError, favoriteTracks} = useAppSelector((state) => state.tracks);
   const id = params.id;
   const [tracks, setTracks] = useState<TrackType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -18,9 +19,17 @@ export default function Category() {
   const [title, setTitle] = useState('');
   const [errorRes, setErrorRes] = useState<string | null>(null);
 
+
   useEffect(() => {
     setIsLoading(true);
 
+    if (id === 'myplaylist') {
+      setTitle('Мой плейлист');
+      setTracks(favoriteTracks);
+      setIsLoading(false);
+      return;
+    }
+    
     if(!fetchIsLoading && allTracks.length){
       getCategories(id)
       .then((res) => {
